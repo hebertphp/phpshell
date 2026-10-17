@@ -1,0 +1,7 @@
+# SQLite local e temporários
+*.sqlite
+*.sqlite3
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
