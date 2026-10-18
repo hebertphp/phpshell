@@ -149,6 +149,80 @@ docker compose down           # parar e remover os containers (mantém os dados 
 docker compose down -v        # parar e APAGAR também os dados do MySQL
 ```
 
+## 6. Rodar na máquina local (sem o Cloud Shell)
+
+O mesmo repositório funciona no seu computador. A diferença é que você abre os endereços `localhost` direto no navegador, sem a Visualização na Web.
+
+### 6.1 Instalar o Docker
+
+- **Windows e Mac:** instale o **Docker Desktop** e abra o programa.
+- **Linux (Ubuntu, Linux Mint e derivados):**
+
+  ```bash
+  sudo apt update
+  sudo apt install docker.io docker-compose-v2
+  ```
+
+  Para usar o `docker` sem `sudo`, adicione seu usuário ao grupo `docker` e **saia e entre de novo** na sessão. Quem está nesse grupo tem poder equivalente ao de administrador; se preferir, use `sudo docker compose ...`.
+
+  ```bash
+  sudo usermod -aG docker $USER
+  ```
+
+Confira se funcionou:
+
+```bash
+docker --version
+docker compose version
+```
+
+### 6.2 Subir o ambiente
+
+```bash
+git clone https://github.com/hebertphp/phpshell.git
+cd phpshell
+docker compose up -d
+```
+
+Depois abra no navegador:
+
+| O quê | Endereço |
+|---|---|
+| Páginas PHP | `http://localhost:8080` |
+| CRUD pronto | `http://localhost:8080/crud/criatabela.php` e depois `http://localhost:8080/crud/relatorio.php` |
+| phpMyAdmin | `http://localhost:8081` (usuário `aluno`, senha `alunopassword`) |
+
+Edite os arquivos de `src/` com qualquer editor (por exemplo, o VS Code). A pasta é compartilhada com o container: salve e atualize a página (F5).
+
+O `conecta.php` continua igual, com `host=mysql_db`: esse é o nome do serviço dentro do Docker e vale em qualquer máquina. As portas `8080` e `8081` precisam estar livres (feche, por exemplo, um XAMPP que esteja rodando).
+
+### 6.3 Ligar o Docker só quando precisar (Linux, pouca memória)
+
+Logo depois de instalar, o Docker no Linux passa a iniciar junto com o sistema. Para ele **só rodar quando você quiser**, desligue a inicialização automática uma vez:
+
+```bash
+sudo systemctl disable --now docker.service docker.socket containerd.service
+```
+
+Para usar o ambiente:
+
+```bash
+sudo systemctl start docker          # liga o Docker
+cd ~/phpshell
+docker compose up -d                 # sobe o ambiente
+```
+
+Ao terminar, pare os containers **antes** de parar o Docker (assim eles não voltam sozinhos na próxima vez) e libere a memória:
+
+```bash
+docker compose down
+sudo systemctl stop docker docker.socket containerd
+```
+
+Com o Docker parado ele não consome memória. O ambiente completo (PHP, MySQL e phpMyAdmin) costuma gastar algo como 0,5 a 1 GB. Para gastar menos, suba só o essencial: `docker compose up -d web mysql_db`.
+
+> A regra do Ctrl+C vale aqui também: não o aperte no terminal que mostra os logs, e use uma aba nova para outros comandos.
+
 ## Problemas comuns
 
 | Sintoma | O que fazer |
