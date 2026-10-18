@@ -125,11 +125,15 @@ Dentro do PHP, o servidor do MySQL é o **nome do serviço** (`mysql_db`), não 
 
 A pasta [`src/crud`](src/crud) tem o **CRUD de produtos** completo da aula [PBE, Tópico 08](https://profhebert.com.br/aulas/pbe/topico08-crud-em-php-com-pdo.html). Não precisa copiar nada: com o ambiente de pé, abra na Visualização na Web (porta 8080):
 
-1. `/crud/criatabela.php` para criar a tabela `produtos` com 3 produtos de exemplo;
-2. `/crud/relatorio.php` para listar, cadastrar, alterar e excluir.
+- **`/crud/`**: página com os links dos arquivos do CRUD (também há um link para ela na página inicial, `/`);
+- **`/crud/criatabela.php`**: cria a tabela `produtos` com 3 produtos de exemplo (só na primeira vez);
+- **`/crud/relatorio.php`**: lista, cadastra, altera e exclui.
+
+> **Atenção ao endereço:** a pasta `src` é a raiz do servidor e **não aparece na URL**. O arquivo `src/crud/relatorio.php` abre em `/crud/relatorio.php` (e **não** em `/src/crud/relatorio.php`). Uma pasta sozinha, como `/crud`, só abre se tiver um `index.php`; nas suas próprias pastas, abra um arquivo específico.
 
 | Arquivo | Função |
 |---|---|
+| `index.php` | Página inicial com os links do exemplo |
 | `conecta.php` | Conexão com o MySQL (PDO) |
 | `criatabela.php` | Cria a tabela e os dados de exemplo |
 | `header.php` e `footer.php` | Layout: menu, estilo e rodapé |
@@ -189,7 +193,7 @@ Depois abra no navegador:
 | O quê | Endereço |
 |---|---|
 | Páginas PHP | `http://localhost:8080` |
-| CRUD pronto | `http://localhost:8080/crud/criatabela.php` e depois `http://localhost:8080/crud/relatorio.php` |
+| CRUD pronto | `http://localhost:8080/crud/` (links) ou direto `http://localhost:8080/crud/criatabela.php` e depois `http://localhost:8080/crud/relatorio.php` |
 | phpMyAdmin | `http://localhost:8081` (usuário `aluno`, senha `alunopassword`) |
 
 Edite os arquivos de `src/` com qualquer editor (por exemplo, o VS Code). A pasta é compartilhada com o container: salve e atualize a página (F5).
@@ -245,6 +249,6 @@ phpshell/
 ├── Dockerfile          # PHP 8.2 (Alpine) com mysqli, pdo_mysql, pdo_pgsql e SQLite
 ├── docker-compose.yml  # serviços web, mysql_db e phpmyadmin
 └── src/                # seus arquivos PHP (pasta do servidor web)
-    ├── index.php       # teste de conexão (MySQL, SQLite e driver PostgreSQL)
-    └── crud/           # exemplo pronto: CRUD de produtos (aula PBE Tópico 08)
+    ├── index.php       # teste de conexão (MySQL, SQLite e driver PostgreSQL) e link do CRUD
+    └── crud/           # exemplo pronto: CRUD de produtos (aula PBE Tópico 08); /crud/ tem os links
 ```
