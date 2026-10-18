@@ -1,5 +1,6 @@
 <?php
-echo "<h2>Status das Conexões com Banco de Dados</h2>";
+echo "<h2>Status do Ambiente PHP</h2>";
+echo "<p>PHP " . PHP_VERSION . "</p>";
 
 // 1. Teste MySQL
 try {
@@ -9,19 +10,18 @@ try {
     echo "<p style='color:red;'>❌ Erro no MySQL: " . $e->getMessage() . "</p>";
 }
 
-// 2. Teste PostgreSQL
-try {
-    $postgres = new PDO("pgsql:host=postgres_db;dbname=meubanco_postgres", "aluno", "alunopassword");
-    echo "<p style='color:green;'>✅ Conexão com <strong>PostgreSQL</strong> realizada com sucesso!</p>";
-} catch (PDOException $e) {
-    echo "<p style='color:red;'>❌ Erro no PostgreSQL: " . $e->getMessage() . "</p>";
-}
-
-// 3. Teste SQLite
+// 2. Teste SQLite
 try {
     $sqlite = new PDO("sqlite:/var/www/html/database.sqlite");
     echo "<p style='color:green;'>✅ Conexão com <strong>SQLite</strong> realizada com sucesso!</p>";
 } catch (PDOException $e) {
     echo "<p style='color:red;'>❌ Erro no SQLite: " . $e->getMessage() . "</p>";
+}
+
+// 3. Driver PostgreSQL (não há servidor PostgreSQL neste ambiente; use um servidor externo)
+if (extension_loaded('pdo_pgsql')) {
+    echo "<p style='color:green;'>✅ Driver <strong>PostgreSQL</strong> (pdo_pgsql) instalado. Conecte a um servidor externo.</p>";
+} else {
+    echo "<p style='color:red;'>❌ Driver PostgreSQL (pdo_pgsql) não encontrado.</p>";
 }
 ?>

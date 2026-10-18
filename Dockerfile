@@ -1,15 +1,12 @@
-FROM php:8.2-apache
+# PHP 8.2 em Alpine (imagem bem menor que php:apache) com o servidor web embutido do PHP.
+# Já vêm no PHP: SQLite (pdo_sqlite e sqlite3). Aqui instalamos: MySQL (mysqli, pdo_mysql) e PostgreSQL (pdo_pgsql).
+FROM php:8.2-cli-alpine
 
-# Instalar dependências do sistema para PostgreSQL e SQLite
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    sqlite3 \
-    libsqlite3-dev \
-    && rm -rf /var/lib/apt/lists/*
+# libpq e sqlite ficam (biblioteca do PostgreSQL e comando sqlite3); as ferramentas de compilação saem no final
+RUN apk add --no-cache libpq sqlite \
+    && apk add --no-cache --virtual .build-deps postgresql-dev \
+    && docker-php-ext-install -j"$(nproc)" mysqli pdo_mysql pdo_pgsql \
+    && apk del .build-deps
 
-# Instalar extensões PHP para MySQL, PostgreSQL e SQLite
-RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pdo_sqlite
-
-# Garantir permissões na pasta padrão do servidor Apache
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 777 /var/www/html
+WORKDIR /var/www/html
+EXPOSE 80
