@@ -114,15 +114,24 @@ Dentro do PHP, o servidor do MySQL é o **nome do serviço** (`mysql_db`), não 
 | SQLite | `sqlite:/var/www/html/database.sqlite` | não usa | não usa |
 | PostgreSQL (servidor externo) | `pgsql:host=SERVIDOR;port=5432;dbname=BANCO;sslmode=require` | o do seu servidor | o do seu servidor |
 
-## Exemplos das aulas
+## CRUD pronto (exemplo da aula)
 
-A pasta [`exemplos/`](exemplos/) tem os códigos prontos das aulas (por exemplo, o CRUD de produtos em [`exemplos/crud`](exemplos/crud)). Para testar um exemplo, copie-o para `src/`:
+A pasta [`src/crud`](src/crud) tem o **CRUD de produtos** completo da aula [PBE, Tópico 08](https://profhebert.com.br/aulas/pbe/topico08-crud-em-php-com-pdo.html). Não precisa copiar nada: com o ambiente de pé, abra na Visualização na Web (porta 8080):
 
-```bash
-cp -r exemplos/crud src/crud
-```
+1. `/crud/criatabela.php` para criar a tabela `produtos` com 3 produtos de exemplo;
+2. `/crud/relatorio.php` para listar, cadastrar, alterar e excluir.
 
-Depois abra `/crud/criatabela.php` e `/crud/relatorio.php` na Visualização na Web (porta 8080). Veja mais detalhes em [`exemplos/README.md`](exemplos/README.md).
+| Arquivo | Função |
+|---|---|
+| `conecta.php` | Conexão com o MySQL (PDO) |
+| `criatabela.php` | Cria a tabela e os dados de exemplo |
+| `header.php` e `footer.php` | Layout: menu, estilo e rodapé |
+| `relatorio.php` | **R**ead: lista os produtos e mostra os avisos |
+| `insere.php` | **C**reate: formulário e `INSERT` |
+| `altera.php` | **U**pdate: formulário preenchido e `UPDATE` |
+| `exclui.php` | **D**elete: `DELETE` |
+
+> Para escrever o seu próprio CRUD, crie outra pasta (por exemplo `src/meucrud`) e use `src/crud` só para comparar. Assim o `git pull` nunca encontra arquivos seus alterados.
 
 ## 5. Parar, reiniciar e limpar
 
@@ -153,7 +162,7 @@ As senhas deste repositório (`alunopassword`, `rootpassword`) são **só para e
 phpshell/
 ├── Dockerfile          # PHP 8.2 (Alpine) com mysqli, pdo_mysql, pdo_pgsql e SQLite
 ├── docker-compose.yml  # serviços web, mysql_db e phpmyadmin
-├── exemplos/           # códigos prontos das aulas (ex.: exemplos/crud)
 └── src/                # seus arquivos PHP (pasta do servidor web)
-    └── index.php       # teste de conexão (MySQL, SQLite e driver PostgreSQL)
+    ├── index.php       # teste de conexão (MySQL, SQLite e driver PostgreSQL)
+    └── crud/           # exemplo pronto: CRUD de produtos (aula PBE Tópico 08)
 ```
