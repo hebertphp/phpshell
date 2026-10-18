@@ -1,5 +1,6 @@
+# Ambiente leve para as aulas: PHP + MySQL + phpMyAdmin (SQLite e driver do PostgreSQL já vão no PHP).
 services:
-  # 1. Servidor Web + PHP
+  # 1. Servidor web + PHP (drivers: MySQL, SQLite e PostgreSQL)
   web:
     build: .
     container_name: aula_php_web
@@ -7,14 +8,20 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
-    command: >
-      sh -c "chmod -R 777 /var/www/html && apache2-foreground"
-    restart: always
+    environment:
+      PHP_CLI_SERVER_WORKERS: 4   # atende mais de uma requisição ao mesmo tempo
+    # umask 000: arquivos criados pelo PHP (ex.: database.sqlite) podem ser editados e apagados por você
+    command: sh -c "umask 000 && exec php -S 0.0.0.0:80 -t /var/www/html"
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    restart: unless-stopped
 
-  # 2. Banco de Dados MySQL
+  # 2. Banco de dados MySQL (ajustado para gastar pouca memória)
   mysql_db:
     image: mysql:8.0
     container_name: aula_mysql_db
+    command: --performance-schema=OFF --innodb-buffer-pool-size=64M --max-connections=30
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: meubanco_mysql
@@ -22,62 +29,26 @@ services:
       MYSQL_PASSWORD: alunopassword
     volumes:
       - mysql_data:/var/lib/mysql
-    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpassword", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+    restart: unless-stopped
 
-  # 3. Banco de Dados PostgreSQL
-  postgres_db:
-    image: postgres:15
-    container_name: aula_postgres_db
-    environment:
-      POSTGRES_DB: meubanco_postgres
-      POSTGRES_USER: aluno
-      POSTGRES_PASSWORD: alunopassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-
-  # 4. phpMyAdmin (Interface para MySQL)
+  # 3. phpMyAdmin (interface para o MySQL)
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin:5-apache
     container_name: aula_phpmyadmin
     ports:
       - "8081:80"
     environment:
       PMA_HOST: mysql_db
-      MYSQL_ROOT_PASSWORD: rootpassword
-    restart: always
-
-  # 5. pgAdmin (Interface dedicada para PostgreSQL)
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: aula_pgadmin
-    ports:
-      - "8083:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: aluno@aula.com
-      PGADMIN_DEFAULT_PASSWORD: alunopassword
-    restart: always
-
-  # 6. SQLite Web (Interface dedicada para SQLite)
-  sqliteweb:
-    image: coleifer/sqlite-web
-    container_name: aula_sqliteweb
-    ports:
-      - "8084:8080"
-    volumes:
-      - ./src:/db
-    environment:
-      SQLITE_DATABASE: database.sqlite
-    restart: always
-
-  # 7. Adminer (Gerenciador Universal)
-  adminer:
-    image: dockette/adminer
-    container_name: aula_adminer
-    ports:
-      - "8082:80"
-    restart: always
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   mysql_data:
-  postgres_data:
