@@ -138,7 +138,7 @@ A pasta [`src/crud`](src/crud) tem o **CRUD de produtos** completo da aula [PBE,
 | `altera.php` | **U**pdate: formulário preenchido e `UPDATE` |
 | `exclui.php` | **D**elete: `DELETE` |
 
-> Para escrever o seu próprio CRUD, crie outra pasta (por exemplo `src/meucrud`) e use `src/crud` só para comparar. Assim o `git pull` nunca encontra arquivos seus alterados.
+> Esta é a mesma pasta usada na aula (`src/crud`). Se você alterar os arquivos e o `git pull` reclamar de alterações locais, guarde-as antes de atualizar: `git stash`, depois `git pull`, e `git stash pop` para recuperá-las.
 
 ## 5. Parar, reiniciar e limpar
 
