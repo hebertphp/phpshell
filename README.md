@@ -37,6 +37,13 @@ Ambiente leve para as aulas de **PHP com banco de dados**. Com um único comando
    docker compose ps
    ```
 
+> ⚠️ **Não aperte Ctrl+C no terminal do ambiente.**
+> Se o terminal estiver mostrando os logs (por exemplo, porque você rodou `docker compose up` **sem o `-d`**), o Ctrl+C **para todos os containers** e o sistema sai do ar.
+>
+> - **Para rodar outros comandos** (como `git pull`), abra uma **aba nova** do terminal no botão **+** da barra do Cloud Shell, em vez de interromper a primeira.
+> - **Para ver os logs** sem risco: `docker compose logs -f web`. Aqui o Ctrl+C só sai da tela de logs.
+> - **Já parou?** Volte para a pasta `phpshell` e rode `docker compose up -d`. Os dados do MySQL continuam lá.
+
 ## 2. Testar no navegador (Visualização na Web)
 
 O Cloud Shell não tem endereço público: você abre as portas pelo botão **Visualização na Web** (ícone de tela com seta), na barra de ferramentas do Cloud Shell, no canto superior direito.
@@ -131,7 +138,7 @@ A pasta [`src/crud`](src/crud) tem o **CRUD de produtos** completo da aula [PBE,
 | `altera.php` | **U**pdate: formulário preenchido e `UPDATE` |
 | `exclui.php` | **D**elete: `DELETE` |
 
-> Para escrever o seu próprio CRUD, crie outra pasta (por exemplo `src/meucrud`) e use `src/crud` só para comparar. Assim o `git pull` nunca encontra arquivos seus alterados.
+> Esta é a mesma pasta usada na aula (`src/crud`). Se você alterar os arquivos e o `git pull` reclamar de alterações locais, guarde-as antes de atualizar: `git stash`, depois `git pull`, e `git stash pop` para recuperá-las.
 
 ## 5. Parar, reiniciar e limpar
 
@@ -149,6 +156,7 @@ docker compose down -v        # parar e APAGAR também os dados do MySQL
 | ❌ Erro no MySQL | O MySQL ainda estava iniciando ou parou. Rode `docker compose ps`, espere ~30 s e atualize a página. |
 | `docker: command not found` ou erro de permissão | Feche e abra o Cloud Shell. O Docker já vem instalado nele. |
 | A Visualização na Web mostra "não foi possível conectar" | Confira com `docker compose ps` se o serviço está `Up` e se a porta escolhida é a certa (8080 PHP, 8081 phpMyAdmin). |
+| Tudo parou depois que apertei Ctrl+C | O Ctrl+C no terminal que mostra os logs (`docker compose up` sem `-d`) para os containers. Rode `docker compose up -d` e use uma **aba nova** do terminal (botão **+**) para outros comandos. |
 | Voltei no dia seguinte e os containers sumiram | O Cloud Shell recicla a máquina após um tempo parado. Rode `docker compose up -d` de novo. Os arquivos da pasta `phpshell` permanecem; as **tabelas e dados do MySQL podem ser perdidos**, então guarde seus comandos `CREATE TABLE` e `INSERT` em um arquivo `.sql` ou `.php` dentro de `src/`. |
 | Atualizei o repositório e o ambiente antigo não sobe | Rode `docker compose down --remove-orphans` e depois `docker compose up -d --build`. |
 
