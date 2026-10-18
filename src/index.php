@@ -1,5 +1,6 @@
 <?php
 echo "<h2>Status do Ambiente PHP</h2>";
+echo "<p>Exemplo da aula: <a href='crud/'>CRUD de produtos</a> (<a href='crud/criatabela.php'>criatabela.php</a> · <a href='crud/relatorio.php'>relatorio.php</a> · <a href='crud/insere.php'>insere.php</a>)</p>";
 echo "<p>PHP " . PHP_VERSION . "</p>";
 
 // 1. Teste MySQL
