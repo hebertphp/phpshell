@@ -237,11 +237,17 @@ Com o Docker parado ele não consome memória. O ambiente completo (PHP, MySQL e
 | Tudo parou depois que apertei Ctrl+C | O Ctrl+C no terminal que mostra os logs (`docker compose up` sem `-d`) para os containers. Rode `docker compose up -d` e use uma **aba nova** do terminal (botão **+**) para outros comandos. |
 | Voltei no dia seguinte e os containers sumiram | O Cloud Shell recicla a máquina após um tempo parado. Rode `docker compose up -d` de novo. Os arquivos da pasta `phpshell` permanecem; as **tabelas e dados do MySQL podem ser perdidos**, então guarde seus comandos `CREATE TABLE` e `INSERT` em um arquivo `.sql` ou `.php` dentro de `src/`. |
 | Atualizei o repositório e o ambiente antigo não sobe | Rode `docker compose down --remove-orphans` e depois `docker compose up -d --build`. |
-| Quero garantir o PHP atualizado (segurança) | Rode `docker compose up -d --build`: ele baixa de novo a imagem base do PHP e recria o container. Depois abra a página inicial (porta 8080): a linha `PHP x.y.z` deve mostrar **8.2.35 ou maior** (correção das falhas críticas de 21/10/2026). Só `docker compose up -d` **não** atualiza uma imagem já baixada. |
+| Quero garantir o PHP atualizado (segurança) | Rode `docker compose up -d --build`: ele baixa de novo a imagem base do PHP e recria o container. Depois abra a página inicial (porta 8080): a linha `PHP x.y.z` deve mostrar **8.2.35 ou maior** (correção das falhas críticas de 21/10/2026; [saiba mais](https://profhebert.com.br/dicas/php/atualize-seu-php)). Só `docker compose up -d` **não** atualiza uma imagem já baixada. |
 
 ## Segurança
 
-**Mantenha o PHP atualizado.** Em 21/10/2026 o PHP corrigiu duas falhas críticas (8.2.35, 8.3.36, 8.4.27 e 8.5.12). O ambiente usa o PHP 8.2, que já recebeu a correção, mas quem montou o ambiente antes dessa data continua com a imagem antiga até reconstruí-la: rode `docker compose up -d --build` e confira a versão (`PHP 8.2.35` ou maior) na página inicial.
+**Mantenha o PHP atualizado.** Em 21/10/2026 o PHP corrigiu duas falhas críticas, que permitem executar código no servidor sem login. As versões corrigidas são 8.5.12, 8.4.27, 8.3.36 e 8.2.35 (o PHP 8.1 e anteriores não recebem correção). O ambiente usa o PHP 8.2, que já recebeu a correção, mas quem montou o ambiente antes dessa data continua com a imagem antiga até reconstruí-la. Para atualizar:
+
+```bash
+docker compose up -d --build
+```
+
+Depois abra a página inicial (porta 8080) e confira a linha `PHP x.y.z`: ela deve mostrar **8.2.35 ou maior**. Só `docker compose up -d` **não** atualiza uma imagem já baixada. Para entender o que aconteceu e como conferir a versão em outros ambientes (por exemplo, `php -v`), veja a dica: [Seu PHP está atualizado?](https://profhebert.com.br/dicas/php/atualize-seu-php)
 
 As senhas deste repositório (`alunopassword`, `rootpassword`) são **só para estudo**. A Visualização na Web é acessível apenas pela sua conta Google, mas nunca use esses valores em um servidor de verdade nem publique as portas na internet.
 
