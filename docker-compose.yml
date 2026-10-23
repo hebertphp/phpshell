@@ -2,7 +2,9 @@
 services:
   # 1. Servidor web + PHP (drivers: MySQL, SQLite e PostgreSQL)
   web:
-    build: .
+    build:
+      context: .
+      pull: true   # a cada build baixa a imagem base mais nova do PHP (correções de segurança)
     container_name: aula_php_web
     ports:
       - "8080:80"
