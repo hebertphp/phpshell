@@ -1,4 +1,5 @@
 # PHP 8.2 em Alpine (imagem bem menor que php:apache) com o servidor web embutido do PHP.
+# A tag 8.2-cli-alpine acompanha as correções de segurança do 8.2: reconstrua com "docker compose up -d --build" para pegar a mais nova.
 # Já vêm no PHP: SQLite (pdo_sqlite e sqlite3). Aqui instalamos: MySQL (mysqli, pdo_mysql) e PostgreSQL (pdo_pgsql).
 FROM php:8.2-cli-alpine
 
